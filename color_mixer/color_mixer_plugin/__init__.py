@@ -102,7 +102,6 @@ class CustomSelectionDialog(QDialog):
         custom_vlayout = QVBoxLayout()
         custom_accept = QPushButton("Confirm Colors")
         self.color_list = QListWidget()
-        self.color_list.setContextMenuPolicy(Qt.ActionsContextMenu)
 
         # Color input Setup
         color_pick_confirm_btn = QPushButton("Pick Color")
@@ -127,7 +126,7 @@ class CustomSelectionDialog(QDialog):
         pantone_input_hlayout.addWidget(self.middle_line)
         pantone_input_hlayout.addWidget(self.end_line)
 
-        # add to layout
+        # Pantone layout
         pantone_layout.addWidget(book_label)
         pantone_layout.addWidget(self.book_dropdown)
         pantone_layout.addWidget(color_pick_label)
@@ -135,8 +134,8 @@ class CustomSelectionDialog(QDialog):
         pantone_layout.addWidget(color_pick_confirm_btn)
 
         # Item removal Action in context menu for color list
-        delete_item = QAction("Remove Color")
-        self.color_list.addAction(delete_item)
+        self.delete_item = QAction("Remove Color")
+        self.color_list.addAction(self.delete_item)
 
         # Default color picker
         default_color_frame = QFrame()
@@ -145,7 +144,6 @@ class CustomSelectionDialog(QDialog):
 
         add_color_btn = QPushButton("Add Color")
         default_color_layout.addWidget(add_color_btn)
-        default_color_layout.addWidget(self.color_list)
         default_color_layout.addWidget(custom_accept)
 
         custom_vlayout.addWidget(pantone_frame)
@@ -168,9 +166,11 @@ class CustomSelectionDialog(QDialog):
         color_pick_confirm_btn.clicked.connect(self.find_pantone_color)
         add_color_btn.clicked.connect(self.add_custom_color)
 
-        delete_item.triggered.connect(
+        self.delete_item.triggered.connect(
             lambda x: self.color_list.takeItem(self.color_list.currentRow())
         )
+
+        self.color_list.setContextMenuPolicy(Qt.ActionsContextMenu)
 
     def add_custom_color(self):
         color_dialog = QColorDialog()
